@@ -79,7 +79,26 @@ static void GravarGrupoBoletos()
 
     var leitorDeBoleto = new LeitorDeBoleto();
     List<Boleto> boletos = leitorDeBoleto.LerBoletos("Boletos.csv");
-    
-    RelatorioDeBoleto gravadorDeCSV = new RelatorioDeBoleto("BoletosPorCedente.csv");
-    gravadorDeCSV.Processar(boletos);
+
+    // RelatorioDeBoleto gravadorDeCSV = new RelatorioDeBoleto("BoletosPorCedente.csv");
+    // gravadorDeCSV.Processar(boletos);
+
+    var nomeParametroConstrutor = "nomeArquivoSaida";
+    var parametroConstrutor = "BoletosPorCedente.csv";
+    var nomeMetodo = "Processar";
+    var parametroMetodo = boletos;
+
+    ProcessarDinamicamente(nomeParametroConstrutor, parametroConstrutor, nomeMetodo, parametroMetodo);
+}
+
+static void ProcessarDinamicamente(string nomeParametroConstrutor, string parametroConstrutor, string nomeMetodo, List<Boleto> parametroMetodo)
+{
+    var tipoClasseRelatorio = typeof(RelatorioDeBoleto);
+    var construtores = tipoClasseRelatorio.GetConstructors();
+
+    foreach (var construtor in construtores)
+    {
+        Console.WriteLine($"Construtor: {construtor.Name}");
+        Console.WriteLine($"No. de parâmetros: {construtor.GetParameters().Length}");
+    }
 }
