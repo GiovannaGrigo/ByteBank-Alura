@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace ByteBank.Common
                     string[] dados = linha.Split(',');
 
                     // carregar objeto Boleto
-                    Boleto boleto = MapearTextoParaBoleto(cabecalho, dados);
+                    Boleto boleto = MapearTextoParaObjeto<Boleto>(cabecalho, dados);
 
                     // adicionar boleto à lista
                     boletos.Add(boleto);
@@ -38,22 +39,27 @@ namespace ByteBank.Common
             return boletos;
         }
 
-        private Boleto MapearTextoParaBoleto(string[] nomesPropriedades, string[] valoresPropriedades)
+        private T MapearTextoParaObjeto<T>(string[] nomesPropriedades, string[] valoresPropriedades)
         {
-            Boleto instancia = new Boleto();
-            instancia.CedenteNome = valoresPropriedades[0];
-            instancia.CedenteCpfCnpj = valoresPropriedades[1];
-            instancia.CedenteAgencia = valoresPropriedades[2];
-            instancia.CedenteConta = valoresPropriedades[3];
-            instancia.SacadoNome = valoresPropriedades[4];
-            instancia.SacadoCpfCnpj = valoresPropriedades[5];
-            instancia.SacadoEndereco = valoresPropriedades[6];
-            instancia.Valor = Convert.ToDecimal(valoresPropriedades[7]);
-            instancia.DataVencimento = Convert.ToDateTime(valoresPropriedades[8]);
-            instancia.NumeroDocumento = valoresPropriedades[9];
-            instancia.NossoNumero = valoresPropriedades[10];
-            instancia.CodigoBarras = valoresPropriedades[11];
-            instancia.LinhaDigitavel = valoresPropriedades[12];
+            T instancia = Activator.CreateInstance<T>();
+
+            for (int i = 0; i < nomesPropriedades.Length; i++)
+            {
+                string nomePropriedade = nomesPropriedades[i];
+                PropertyInfo propertyInfo = instancia.GetType().GetProperty(nomePropriedade);
+
+                if (propertyInfo != null)
+                {
+                    Type propertyType = propertyInfo.PropertyType;
+
+                    string valor = valoresPropriedades[i];
+
+                    object valorConvertido = Convert.ChangeType(valor, propertyType);
+
+                    propertyInfo.SetValue(instancia, valorConvertido);
+                }
+            }
+
             return instancia;
         }
     }
