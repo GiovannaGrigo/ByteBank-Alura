@@ -160,5 +160,11 @@ static List<Type> ObterClassesDePlugin<T>()
         Console.WriteLine();
     }
 
+    // Encontrar tipos que implementam a interface T
+    var tiposImplementandoT = tipos.Where(t => typeof(T).IsAssignableFrom(t)
+        && t.IsClass && !t.IsAbstract);
+
+    tiposEncontrados.AddRange(tiposImplementandoT);
+
     return tiposEncontrados;
 }
