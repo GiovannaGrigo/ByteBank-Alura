@@ -13,11 +13,11 @@ namespace ConsultoriaABC.Plugins
 
         private void GerarDocumentos(List<Boleto> boletos, string pastaDestino)
         {
+            // Verificar se a pasta de destino existe, se não, criar
             if (!Directory.Exists(pastaDestino))
             {
                 Directory.CreateDirectory(pastaDestino);
             }
-
             // Gerar documento para cada boleto na lista
             foreach (var boleto in boletos)
             {
@@ -57,7 +57,6 @@ Código de Barras: {boleto.CodigoBarras}
 Linha Digitável: {boleto.LinhaDigitavel}
 ------------------------------------------------------------------------------
 ";
-
             return textoBoleto;
         }
     }

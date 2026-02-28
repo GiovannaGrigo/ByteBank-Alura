@@ -45,7 +45,6 @@ namespace ConsultoriaXYZ.Plugins
 
                         // Escrever valor da propriedade como texto
                         xmlWriter.WriteString(property.GetValue(objeto)?.ToString() ?? "");
-
                         xmlWriter.WriteEndElement(); // End property element
                     }
 
@@ -93,6 +92,5 @@ namespace ConsultoriaXYZ.Plugins
 
             return boletosPorCedenteList;
         }
-
     }
 }
